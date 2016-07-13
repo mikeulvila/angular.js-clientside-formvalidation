@@ -1,10 +1,18 @@
-var app = angular.module('minmax', []);
+var app = angular.module('minmax', ['jcs-autoValidate']);
+
+app.run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver) {
+    defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
+      errorMessages['tooYoung'] = 'You must be at least {0} years old to use this site';
+      errorMessages['tooOld'] = 'You must be under {0} years old to use this site';
+      errorMessages['badUsername'] = 'Username can only contain numbers and letters and _';
+    });
+}]);
 
 app.controller('MinMaxCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.formModel;
 
-  $scope.onSubmit = function (valid) {
-    if (valid) {
+  $scope.onSubmit = function () {
+
       $http.post('https://minmax-server.herokuapp.com/register/', $scope.formModel)
         .success(function(data) {
           console.log('success data: ', data);
@@ -12,9 +20,7 @@ app.controller('MinMaxCtrl', ['$scope', '$http', function ($scope, $http) {
         .error(function (error) {
            console.error('post error: ', error)
         });
-    } else {
-      console.log('invalid form');
-    }
+
   } // end onSubmit
 
 }]);
