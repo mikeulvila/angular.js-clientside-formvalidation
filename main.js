@@ -1,4 +1,7 @@
-var app = angular.module('minmax', ['jcs-autoValidate']);
+var app = angular.module('minmax', [
+  'jcs-autoValidate',
+  'angular-ladda'
+  ]);
 
 app.run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver) {
     defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
@@ -9,16 +12,20 @@ app.run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver) {
 }]);
 
 app.controller('MinMaxCtrl', ['$scope', '$http', function ($scope, $http) {
-  $scope.formModel;
+  $scope.formModel = {};
+  $scope.submitting = false;
 
   $scope.onSubmit = function () {
+      $scope.submitting = true;
 
       $http.post('https://minmax-server.herokuapp.com/register/', $scope.formModel)
         .success(function(data) {
+          $scope.submitting = false;
           console.log('success data: ', data);
         })
         .error(function (error) {
-           console.error('post error: ', error)
+          $scope.submitting = false;
+          console.error('post error: ', error)
         });
 
   } // end onSubmit
