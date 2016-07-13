@@ -32,8 +32,8 @@
 
         <div class="form-group"
              ng-class="
-              { 'has-error': theForm.email.$invalid && !theForm.$pristine,
-                'has-success': theForm.email.$valid && !theForm.$pristine
+              { 'has-error': theForm.email.$invalid && (!theForm.$pristine || theForm.$submitted),
+                'has-success': theForm.email.$valid && (!theForm.$pristine || theForm.$submitted)
               }">
           <label for="email" class='control-label'>Email</label >
           <input type="email"
@@ -42,6 +42,8 @@
                  id="email"
                  required="required"
                  name='email'>
+          <p class="help-block" ng-show="theForm.email.$error.required && (theForm.$dirty || theForm.$submitted)">This field is required</p>
+          <p class="help-block" ng-show="theForm.email.$error.email && (theForm.$dirty || theForm.$submitted)">Please enter a valid email address</p>
         </div >
 
         <div class="form-group" >
